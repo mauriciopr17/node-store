@@ -3,21 +3,14 @@
 // require -> importar pacotes
 const express = require("express");
 const router = express.Router(); // arquivo de rotas
+const controller = require("../controllers/product-controller");
 
-router.post("/", (req, res, next) => {
-  res.status(201).send(req.body); //pegando o corpo da requisição
-});
-
-router.put("/:id", (req, res, next) => {
-  let id = req.params.id;
-  res.status(201).send({
-    id: id,
-    item: req.body,
-  }); //pegando o corpo da requisição
-});
-
-router.delete("/", (req, res, next) => {
-  res.status(200).send(req.body); //pegando o corpo da requisição
-});
+router.get("/", controller.get);
+router.get("/:slug", controller.getBySlug);
+router.get("/admin/:id", controller.getById);
+router.get("/tags/:tag", controller.getByTag);
+router.post("/", controller.post);
+router.put("/:id", controller.put);
+router.delete("/", controller.delete);
 
 module.exports = router;
