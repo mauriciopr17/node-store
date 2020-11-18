@@ -7,6 +7,8 @@ const repository = require("../repositories/customer-repository");
 //baixar dependência -> npm install md5 --save
 const md5 = require("md5");
 
+const emailService = require("../services/email-service.js");
+
 exports.post = async (req, res, next) => {
   const valida = new ValidationContract();
   valida.hasMinLen(
@@ -27,6 +29,13 @@ exports.post = async (req, res, next) => {
       email: req.body.email,
       password: md5(req.body.password + global.SALT_KEY), // encripitando a senha (gera um hash) + concatenando com um hash que criamos para dificultar a senha
     });
+
+    emailService.send(
+      req.body.email,
+      "Bem vindo ao Node Store",
+      global.EMAIL_TMPL.replace("{0}", req.body.name)
+    );
+
     res.status(201).send({ message: "Cliente cadastrado com sucesso!!!" });
   } catch (e) {
     res.status(500).send({
